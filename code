@@ -1,0 +1,72 @@
+const int LDR_LEFT_PIN = A0;
+const int LDR_RIGHT_PIN = A1;
+const int MOTOR_LEFT_FORWARD = 2;
+const int MOTOR_LEFT_BACKWARD = 3;
+const int MOTOR_RIGHT_FORWARD = 4;
+const int MOTOR_RIGHT_BACKWARD = 5;
+
+void setup() {
+  // Initialize motor control pins as outputs
+  pinMode(MOTOR_LEFT_FORWARD, OUTPUT);
+  pinMode(MOTOR_LEFT_BACKWARD, OUTPUT);
+  pinMode(MOTOR_RIGHT_FORWARD, OUTPUT);
+  pinMode(MOTOR_RIGHT_BACKWARD, OUTPUT);
+  
+  // Initialize serial communication for debugging
+  Serial.begin(9600);
+}
+
+void loop() {
+  // Read LDR values
+  int LDR_LEFT = analogRead(LDR_LEFT_PIN);
+  int LDR_RIGHT = analogRead(LDR_RIGHT_PIN);
+  
+  // Print LDR values for debugging
+  Serial.print("LDR Left: ");
+  Serial.print(LDR_LEFT);
+  Serial.print("  LDR Right: ");
+  Serial.println(LDR_RIGHT);
+  
+  // Determine robot movement based on LDR values
+  if (LDR_LEFT > LDR_RIGHT + 50) {
+    // Move left towards the light
+    moveLeft();
+  } else if (LDR_RIGHT > LDR_LEFT + 50) {
+    // Move right towards the light
+    moveRight();
+  } else {
+    // Move forward
+    moveForward();
+  }
+  
+  // Small delay to allow time for movement
+  delay(100);
+}
+
+void moveForward() {
+  digitalWrite(MOTOR_LEFT_FORWARD, HIGH);
+  digitalWrite(MOTOR_LEFT_BACKWARD, LOW);
+  digitalWrite(MOTOR_RIGHT_FORWARD, HIGH);
+  digitalWrite(MOTOR_RIGHT_BACKWARD, LOW);
+}
+
+void moveLeft() {
+  digitalWrite(MOTOR_LEFT_FORWARD, LOW);
+  digitalWrite(MOTOR_LEFT_BACKWARD, HIGH);
+  digitalWrite(MOTOR_RIGHT_FORWARD, HIGH);
+  digitalWrite(MOTOR_RIGHT_BACKWARD, LOW);
+}
+
+void moveRight() {
+  digitalWrite(MOTOR_LEFT_FORWARD, HIGH);
+  digitalWrite(MOTOR_LEFT_BACKWARD, LOW);
+  digitalWrite(MOTOR_RIGHT_FORWARD, LOW);
+  digitalWrite(MOTOR_RIGHT_BACKWARD, HIGH);
+}
+
+void stopMotors() {
+  digitalWrite(MOTOR_LEFT_FORWARD, LOW);
+  digitalWrite(MOTOR_LEFT_BACKWARD, LOW);
+  digitalWrite(MOTOR_RIGHT_FORWARD, LOW);
+  digitalWrite(MOTOR_RIGHT_BACKWARD, LOW);
+}
